@@ -4,7 +4,7 @@ import institucion.com.colegio.services.UsuarioDetailsService;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -22,7 +22,23 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        BCryptPasswordEncoder delegate = new BCryptPasswordEncoder();
+
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rawPassword) {
+                return delegate.encode(rawPassword);
+            }
+
+            @Override
+            public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                if (encodedPassword != null && encodedPassword.startsWith("$2")) {
+                    return delegate.matches(rawPassword, encodedPassword);
+                }
+
+                return encodedPassword != null && encodedPassword.contentEquals(rawPassword);
+            }
+        };
     }
 
     @Bean
@@ -43,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/registro", "/css/**").permitAll()
                         .requestMatchers("/estudiante").hasRole("ESTUDIANTE")
                         .requestMatchers("/docente").hasRole("DOCENTE")
-                        .requestMatchers("/rector").hasRole("RECTOR")
+                        .requestMatchers("/rector/**").hasRole("RECTOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

@@ -1,5 +1,6 @@
 package institucion.com.colegio.services;
 
+import institucion.com.colegio.dto.UsuarioAdminDTO;
 import institucion.com.colegio.dto.UsuarioRegistroDTO;
 import institucion.com.colegio.model.Rol;
 import institucion.com.colegio.model.Usuario;
@@ -30,9 +31,23 @@ public class UsuarioService {
 
         Usuario usuario = new Usuario();
         usuario.setNombre(dto.getNombre());
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(rolEstudiante);
 
         usuarioRepository.save(usuario);
     }
+
+    public void registrarEstudianteAdmin(UsuarioAdminDTO dto) {
+
+        Rol rolEstudiante = rolRepository.findByTipo("ESTUDIANTE")
+                .orElseThrow(() -> new RuntimeException("Rol ESTUDIANTE no encontrado"));
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre(dto.getNombre());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setRol(rolEstudiante);
+
+        usuarioRepository.save(usuario);
+    }
+
 }

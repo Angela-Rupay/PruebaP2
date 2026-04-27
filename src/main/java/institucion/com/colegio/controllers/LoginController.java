@@ -35,13 +35,4 @@ public class LoginController {
         return "estudiante";
     }
 
-    @GetMapping("/docente")
-    public String vistaDocente() {
-        return "docente";
-    }
-
-    @GetMapping("/rector")
-    public String vistaRector() {
-        return "rector";
-    }
 }

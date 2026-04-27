@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Asignatura</title>
+    <link rel="stylesheet" href="/css/Style.css">
+</head>
+<body>
+
+<header>Institución Colegio</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Crear Asignatura</h2>
+
+        <form th:action="@{/rector/crear-asignatura}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <input type="text" name="nombre" placeholder="Nombre de la asignatura" required>
+
+            <label>Hora inicio:</label>
+            <input type="time" name="horaInicio" required>
+            <label>Hora fin:</label>
+            <input type="time" name="horaFin" required>
+
+            <input type="text" name="salon" placeholder="Salón" required>
+
+            <select name="docenteId" required>
+                <option value="">Seleccione docente</option>
+                <option th:each="docente : ${docentes}"
+                        th:value="${docente.idUsuario}"
+                        th:text="${docente.nombre}">
+                </option>
+            </select>
+
+            <button type="submit">Crear Asignatura</button>
+        </form>
+
+        <p><a th:href="@{/rector}">Volver</a></p>
+    </div>
+</div>
+
+</body>
+</html>
