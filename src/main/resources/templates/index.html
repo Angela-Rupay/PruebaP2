@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Institución Colegio</title>
+    <link rel="stylesheet" href="/css/Style.css">
+</head>
+<body>
+
+<header>Institución Colegio</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Iniciar Sesión</h2>
+        <form th:action="@{/login}" method="post">
+            <!-- Spring Security exige el token CSRF en el POST del login; sin esto no se ejecuta la redirección por rol. -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="text" name="username" placeholder="Nombre de usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
+        </form>
+        <!-- Este mensaje ayuda a distinguir un fallo real de credenciales de un problema del formulario. -->
+        <p th:if="${param.error}" style="color: #b00020;">Usuario o contraseña incorrectos.</p>
+        <p>¿No tienes cuenta?</p>
+        <a href="/registro">Regístrate</a>
+    </div>
+</div>
+
+</body>
+</html>
